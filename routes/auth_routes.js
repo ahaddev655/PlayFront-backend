@@ -1,5 +1,9 @@
 import express from 'express'
+import upload from '../middleware/uploads.js'
+import { signUp } from './../controllers/auth_controllers.js';
 
-router = express.Router()
+const routes = express.Router()
 
-router.post("/signup", upload.single("profileImage"), signUp);
+routes.post("/signup", upload.single("profileImage"), signUp);
+
+export default routes

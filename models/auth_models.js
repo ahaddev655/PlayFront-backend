@@ -1,4 +1,4 @@
-import { db } from "../config/db_connection.js";
+import db from "../config/db.js";
 
 export const createUser = (username, email, hashedPassword, profileImage) => {
   const query = `
