@@ -8,18 +8,16 @@ export const signUp = async (req, res) => {
     const { username, email, password, name } = req.body;
 
     // Validation
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !name) {
       return res
         .status(400)
         .json({ success: false, error: "All fields are required" });
     }
     if (password.length < 8) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          error: "Password must be at least 8 characters",
-        });
+      return res.status(400).json({
+        success: false,
+        error: "Password must be at least 8 characters",
+      });
     }
 
     // Check if user already exists

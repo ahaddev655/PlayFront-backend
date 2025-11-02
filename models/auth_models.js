@@ -1,13 +1,25 @@
-import db from "../config/db.js";
-
-export const createUser = (username, email, hashedPassword, profileImage) => {
+export const createUser = async (
+  username,
+  email,
+  hashedPassword,
+  profileImage,
+) => {
   const query = `
     INSERT INTO users (username, email, password, profile_image)
     VALUES (?, ?, ?, ?)
   `;
-  db.query(query, [username, email, hashedPassword, profileImage]);
+  const [result] = await db.query(query, [
+    username,
+    email,
+    hashedPassword,
+    profileImage,
+  ]);
+  return result;
 };
 
-export const findUserByUserName = (username) => {
-  db.query("SELECT * FROM users WHERE username = ?", [username]);
+export const findUserByUserName = async (username) => {
+  const [rows] = await db.query("SELECT * FROM users WHERE username = ?", [
+    username,
+  ]);
+  return rows[0];
 };

@@ -1,20 +1,21 @@
 import mysql2 from "mysql2";
 import dotenv from "dotenv";
-
+import config from "./db.config.js";
 dotenv.config();
 
-const db = mysql2.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const db = mysql2.createPool({
+  host: config.db_host,
+  user: config.db_user,
+  password: config.db_password,
+  database: config.db_name,
 });
 
-db.connect((err) => {
+db.getConnection((err, connection) => {
   if (err) {
     console.error("❌ MySQL connection failed:", err.message);
   } else {
     console.log("✅ Connected to MySQL database");
+    connection.release();
   }
 });
 
