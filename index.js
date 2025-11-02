@@ -4,6 +4,7 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import createUserTable from "./database/user_table.js";
+import authRoutes from './routes/auth_routes.js'
 
 dotenv.config();
 
@@ -18,6 +19,9 @@ app.use(express.json());
 
 // Tables
 createUserTable();
+
+// Routes
+app.use('/api/auth', authRoutes)
 
 // Socket.io
 io.on("connection", (socket) => {
