@@ -20,12 +20,12 @@ export const signUp = async (req, res) => {
       });
     }
 
-    // Check if user already exists
-    const user = findUserByUserName(username);
+    // ✅ Check if user already exists
+    const user = await findUserByUserName(username);
     if (user) {
       return res
         .status(400)
-        .json({ success: false, error: "User already exists" });
+        .json({ success: false, error: "Username already exists" });
     }
 
     // Upload profile image to Cloudinary
@@ -40,28 +40,14 @@ export const signUp = async (req, res) => {
     // Generate JWT token
     const token = jwt.sign({ email }, process.env.JWT_SECRET);
 
-    // Create user
-    createUser(
-      username,
-      email,
-      hashedPassword,
-      profileImageUrl,
-      token,
-      (err) => {
-        if (err) {
-          console.error("Error creating user:", err);
-          return res
-            .status(500)
-            .json({ success: false, error: "User creation failed" });
-        }
+    // ✅ Create user
+    await createUser(username, email, hashedPassword, profileImageUrl, token);
 
-        res.status(201).json({
-          success: true,
-          message: "User registered successfully",
-          token,
-        });
-      },
-    );
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      token,
+    });
   } catch (error) {
     console.error("Sign-up error:", error);
     res.status(500).json({ success: false, error: "Internal server error" });

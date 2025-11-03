@@ -1,3 +1,5 @@
+import db from "../config/db.js";
+
 export const createUser = async (
   username,
   email,
@@ -6,9 +8,10 @@ export const createUser = async (
   token,
 ) => {
   const query = `
-    INSERT INTO users (username, email, password, token, profile_image)
-    VALUES (?, ?, ?, ?)
-  `;
+  INSERT INTO users (username, email, password, token, profile_image)
+  VALUES (?, ?, ?, ?, ?)
+`;
+
   const [result] = await db.query(query, [
     username,
     email,
