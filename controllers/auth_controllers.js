@@ -37,24 +37,31 @@ export const signUp = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate JWT token
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
+
     // Create user
-    createUser(username, email, hashedPassword, profileImageUrl, (err) => {
-      if (err) {
-        console.error("Error creating user:", err);
-        return res
-          .status(500)
-          .json({ success: false, error: "User creation failed" });
-      }
+    createUser(
+      username,
+      email,
+      hashedPassword,
+      profileImageUrl,
+      token,
+      (err) => {
+        if (err) {
+          console.error("Error creating user:", err);
+          return res
+            .status(500)
+            .json({ success: false, error: "User creation failed" });
+        }
 
-      // Generate JWT token
-      const token = jwt.sign({ email }, process.env.JWT_SECRET);
-
-      res.status(201).json({
-        success: true,
-        message: "User registered successfully",
-        token,
-      });
-    });
+        res.status(201).json({
+          success: true,
+          message: "User registered successfully",
+          token,
+        });
+      },
+    );
   } catch (error) {
     console.error("Sign-up error:", error);
     res.status(500).json({ success: false, error: "Internal server error" });

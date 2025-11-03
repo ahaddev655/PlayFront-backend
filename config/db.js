@@ -4,10 +4,10 @@ import config from "./db.config.js";
 dotenv.config();
 
 const db = mysql2.createPool({
-  host: config.db_host,
-  user: config.db_user,
-  password: config.db_password,
-  database: config.db_name,
+  host: config.db_host || "mysql-sa-blogs.alwaysdata.net",
+  user: config.db_user || "sa-blogs",
+  password: config.db_password || "3104944Tony",
+  database: config.db_name || "sa-blogs_db_playfront",
 });
 
 db.getConnection((err, connection) => {
