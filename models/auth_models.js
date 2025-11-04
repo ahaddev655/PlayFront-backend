@@ -6,14 +6,16 @@ export const createUser = async (
   hashedPassword,
   profileImage,
   token,
+  fullName
 ) => {
   const query = `
-  INSERT INTO users (username, email, password, token, profile_image)
-  VALUES (?, ?, ?, ?, ?)
+  INSERT INTO users (fullName, username, email, password, token, profile_image)
+  VALUES (?, ?, ?, ?, ?, ?)
 `;
 
   const [result] = await db.query(query, [
     username,
+    fullName,
     email,
     hashedPassword,
     token,

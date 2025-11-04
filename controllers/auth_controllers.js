@@ -5,20 +5,7 @@ import { createUser, findUserByUserName } from "../models/auth_models.js";
 
 export const signUp = async (req, res) => {
   try {
-    const { username, email, password, name } = req.body;
-
-    // Validation
-    if (!username || !email || !password || !name) {
-      return res
-        .status(400)
-        .json({ success: false, error: "All fields are required" });
-    }
-    if (password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        error: "Password must be at least 8 characters",
-      });
-    }
+    const { username, email, password, fullName } = req.body;
 
     // ✅ Check if user already exists
     const user = await findUserByUserName(username);
@@ -41,7 +28,7 @@ export const signUp = async (req, res) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET);
 
     // ✅ Create user
-    await createUser(username, email, hashedPassword, profileImageUrl, token);
+    await createUser(username, email, hashedPassword, profileImageUrl, token, fullName);
 
     res.status(201).json({
       success: true,
@@ -50,6 +37,8 @@ export const signUp = async (req, res) => {
     });
   } catch (error) {
     console.error("Sign-up error:", error);
-    res.status(500).json({ success: false, error: "Internal server error", error: error });
+    res
+      .status(500)
+      .json({ success: false, error: "Internal server error", error: error });
   }
 };
