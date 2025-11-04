@@ -50,6 +50,6 @@ export const signUp = async (req, res) => {
     });
   } catch (error) {
     console.error("Sign-up error:", error);
-    res.status(500).json({ success: false, error: "Internal server error" });
+    res.status(500).json({ success: false, error: "Internal server error", error: error });
   }
 };
