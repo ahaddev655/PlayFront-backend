@@ -42,3 +42,51 @@ export const signUp = async (req, res) => {
       .json({ success: false, error: "Internal server error", error: error });
   }
 };
+
+export const googleAuth = async (req, res) => {
+  try {
+    const { email, fullName, profileImage } = req.body;
+
+    // Username from email (before @)
+    const username = email.split("@")[0];
+
+    // Check if user exists
+    let user = await findUserByUserName(username);
+
+    if (!user) {
+      // Dummy password (hashed)
+      const dummyPassword = await bcrypt.hash("google_dummy_password", 10);
+
+      // Generate token
+      const token = jwt.sign({ email }, process.env.JWT_SECRET);
+
+      // Create new user
+      await createUser(
+        username,
+        email,
+        dummyPassword,
+        profileImage || null,
+        token,
+        fullName
+      );
+
+      return res.status(201).json({
+        success: true,
+        message: "Google signup successful",
+        token,
+      });
+    }
+
+    // If user already exists — just sign in
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
+    res.status(200).json({
+      success: true,
+      message: "Google login successful",
+      token,
+    });
+
+  } catch (error) {
+    console.error("Google Auth error:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};
